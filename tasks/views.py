@@ -6,7 +6,7 @@ URL-конфигурация выбирает функцию. ORM обращае
 
 from django.db.models import F
 from django.http import Http404, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from .forms import TaskForm
@@ -38,6 +38,17 @@ def task_list(request):
         status=status,
     )
 
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    return render(request, "tasks/task_detail.html", {"task": task})
+
+def task_delete(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    if request.method == "POST":
+        task.delete()
+
+    return redirect("tasks:task_list")
 
 @require_POST
 def task_toggle(request, task_id):
