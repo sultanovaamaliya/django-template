@@ -5,6 +5,12 @@
 </head>
 <body>
     <h1>{{ task.title }}</h1>
-    <p>{{ task.done }}</p>
+      <p>Состояние: {% if task.done %}Готово{% else %}В работе{% endif %}</p>
+
+      <form method="post" action="{% url 'tasks:task_delete' task.id %}">
+        {% csrf_token %}
+        <button type="submit" class="secondary">Удалить</button>
+      </form>
+    </main>
 </body>
 </html>

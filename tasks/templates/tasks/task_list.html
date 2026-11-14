@@ -26,12 +26,21 @@
         {% for task in tasks %}
           <li>
             <span class="{% if task.done %}done{% endif %}">{{ task.title }}</span>
+
+            <!-- Ваша старая кнопка переключения статуса -->
             <form method="post" action="{% url 'tasks:task_toggle' task.id %}">
               {% csrf_token %}
               <button type="submit" class="secondary">
                 {% if task.done %}Вернуть в работу{% else %}Готово{% endif %}
               </button>
             </form>
+
+            <!-- НОВАЯ КНОПКА УДАЛЕНИЯ (добавили вот эти 4 строчки) -->
+            <form method="post" action="{% url 'tasks:task_delete' task.id %}">
+              {% csrf_token %}
+              <button type="submit" class="secondary">Удалить</button>
+            </form>
+
           </li>
         {% empty %}
           <li class="empty">Пока нет задач. Добавьте первую.</li>

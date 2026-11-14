@@ -112,3 +112,39 @@ def test_admin_displays_tasks(admin_client):
     response = admin_client.get(reverse("admin:tasks_task_changelist"))
     assert response.status_code == 200
     assert "Задача в админке" in response.content.decode()
+
+
+def test_task_detail_success(client):
+    task = Task.objects.create(title="Купить молоко", done=False)
+    url = reverse("tasks:task_detail", args=[task.id])
+    response = client.get(url)
+
+    assert response.status_code == 200
+    assert "Купить молоко" in response.content.decode()
+
+
+def test_unknown_task_returns_404(client):
+    detail_url = reverse("tasks:task_detail", args=[9999])
+    delete_url = reverse("tasks:task_delete", args=[9999])
+    response_detail = client.get(detail_url)
+    response_delete = client.post(delete_url)
+
+    assert response_detail.status_code == 404
+    assert response_delete.status_code == 404
+
+
+def test_delete_task_via_post(client):
+    task = Task.objects.create(title="Удалить меня")
+    url = reverse("tasks:task_delete", args=[task.id])
+    response = client.post(url)
+
+    assert response.status_code == 302
+    assert response.url == reverse("tasks:task_list")
+    assert not Task.objects.filter(id=task.id).exists()
+
+
+def test_do_not_delete_task_via_get(client):
+    task = Task.objects.create(title="Задача")
+    url = reverse("tasks:task_delete", args=[task.id])
+    client.get(url)
+    assert Task.objects.filter(id=task.id).exists()
