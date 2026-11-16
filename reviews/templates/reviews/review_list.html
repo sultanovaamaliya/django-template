@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Отзывы</title>
+</head>
+<body>
+  <main>
+    <h1>Отзывы</h1>
+
+    <form method="post" action="{% url 'reviews:review_list' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Отправить отзыв</button>
+    </form>
+
+    <hr>
+
+    <ul>
+      {% for review in reviews %}
+        <li>
+          <strong>{{ review.author }}</strong>: {{ review.text }}
+        </li>
+      {% empty %}
+        <li>Пока нет отзывов.</li>
+      {% endfor %}
+    </ul>
+  </main>
+</body>
+</html>

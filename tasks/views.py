@@ -15,7 +15,7 @@ from .models import Task
 
 @require_GET
 def index(request):
-    return redirect("tasks:task_list")
+    return redirect("reviews:task_list")
 
 
 @require_http_methods(["GET", "POST"])
@@ -26,21 +26,21 @@ def task_list(request):
         if form.is_valid():
             form.save()
             # Стандартный redirect Django вернёт 302. Браузер выполнит GET.
-            return redirect("tasks:task_list")
+            return redirect("reviews:task_list")
         status = 400
     else:
         form = TaskForm()
 
     return render(
         request,
-        "tasks/task_list.html",
-        {"tasks": Task.objects.all(), "form": form},
+        "reviews/task_list.html",
+        {"reviews": Task.objects.all(), "form": form},
         status=status,
     )
 
 def task_detail(request, task_id):
     task = get_object_or_404(Task, id=task_id)
-    return render(request, "tasks/task_detail.html", {"task": task})
+    return render(request, "reviews/task_detail.html", {"task": task})
 
 def task_delete(request, task_id):
     task = get_object_or_404(Task, id=task_id)
@@ -48,7 +48,7 @@ def task_delete(request, task_id):
     if request.method == "POST":
         task.delete()
 
-    return redirect("tasks:task_list")
+    return redirect("reviews:task_list")
 
 @require_POST
 def task_toggle(request, task_id):
@@ -56,7 +56,7 @@ def task_toggle(request, task_id):
     updated = Task.objects.filter(pk=task_id).update(done=~F("done"))
     if updated == 0:
         raise Http404("Задача не найдена.")
-    return redirect("tasks:task_list")
+    return redirect("reviews:task_list")
 
 
 @require_GET
@@ -68,4 +68,4 @@ def task_api(request):
     tasks = Task.objects.all()
     if done is not None:
         tasks = tasks.filter(done=done == "1")
-    return JsonResponse({"tasks": list(tasks.values("id", "title", "done"))})
+    return JsonResponse({"reviews": list(tasks.values("id", "title", "done"))})

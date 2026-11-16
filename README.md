@@ -14,7 +14,7 @@
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python manage.py makemigrations tasks
+python manage.py makemigrations reviews
 python manage.py migrate
 python manage.py runserver
 ```
@@ -147,9 +147,9 @@ priority = models.PositiveSmallIntegerField(default=0)
 Затем в терминале выполните:
 
 ```bash
-python manage.py makemigrations tasks
+python manage.py makemigrations reviews
 python manage.py migrate
-python manage.py showmigrations tasks
+python manage.py showmigrations reviews
 ```
 
 Перезапустите Django shell и проверьте `Task.objects.values("title", "priority")`. У существующих записей появится значение `0`. Изменения модели оформляйте миграциями и сохраняйте файлы миграций вместе с исходным кодом.
